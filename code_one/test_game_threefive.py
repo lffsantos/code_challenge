@@ -1,6 +1,6 @@
 import pytest
 
-from code_one.game_treefive import (
+from code_one.game_threefive import (
     multiple_of, robot, multiple_of_5, multiple_of_3, three_five
 )
 
