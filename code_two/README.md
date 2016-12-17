@@ -34,6 +34,16 @@ Out[8]: 'G1S 9GS'
 
 In [9]: PostCodeUk.radom_postcode()
 Out[9]: 'TD4Y 1SS'
+
+In [10]: PostCodeUk.find_all_in_text('example of text with postcodes A7 7AA and other code A8 9BB ',['A7 7AA'])
+Out[10]: ['A7 7AA']
+
+In [11]: PostCodeUk.find_all_in_text('example of text with postcodes A7 7AA and other code A8 9BB ',['A7 8AA'])
+Out[11]: []
+
+In [12]: PostCodeUk.find_all_in_text('example of text with postcodes A7 7AA and other code A8 9BB ')
+Out[12]: ['A7 7AA', 'A8 9BB']
+
 ```
 
 - Explore this package using iPython
