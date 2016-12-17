@@ -1,5 +1,6 @@
 import pytest
-from postcodeuk import PostCodeUk
+
+from code_two.postcodeuk import PostCodeUk
 
 
 class TestPostCodeUk:
