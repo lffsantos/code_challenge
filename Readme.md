@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/lffsantos/code_challenge.svg?branch=master)](https://travis-ci.org/lffsantos/code_challenge)
+
 This project using Python 3.5
 
 Steps for test:
@@ -14,7 +16,7 @@ py.test
 Execute Code2:
 
 > cd code_challenge  
-> python code_one/question_2.py    
+> python code_one/game_treefive.py    
 
 Execute Code3:
 

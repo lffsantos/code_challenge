@@ -58,7 +58,7 @@ class TestPostCodeUk:
     def test_get_inward(self, postcode, expected):
         assert postcode.get_inward() == expected
 
-    def test_radom_postcode(self):
+    def test_random_postcode(self):
         for i in range(50):
             postcode = PostCodeUk(PostCodeUk.random_postcode())
             assert postcode.is_valid()
