@@ -16,7 +16,7 @@ py.test
 Execute Code2:
 
 > cd code_challenge  
-> python code_one/game_treefive.py    
+> python code_one/game_threefive.py    
 
 Execute Code3:
 
