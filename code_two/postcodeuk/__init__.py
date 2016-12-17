@@ -26,6 +26,7 @@ class PostCodeUk:
     INWARD_PATTERN = '[0-9][ABD-HJLNP-UW-Z]{2}'
     OUTWARD_PATTERN = '|'.join(list(OUTWARD_PATTERNS.values()))
     VALID_POSTCODE_PATTERN = r"^("+OUTWARD_PATTERN+")[ ]*("+INWARD_PATTERN+"$)"
+    POSTCODE_PATTERN_IN_TEXT = r"("+OUTWARD_PATTERN+") ("+INWARD_PATTERN+")"
     _inward = None
     _outward = None
 
@@ -38,15 +39,20 @@ class PostCodeUk:
             )
         self.post_code = post_code
 
+    @staticmethod
+    def _validate(post_code):
+        regex_postcode = re.match(PostCodeUk.VALID_POSTCODE_PATTERN, post_code)
+        return regex_postcode if regex_postcode else None
+
     def is_valid(self):
         if not self.post_code:
             return False
 
-        regex_postcode = re.match(PostCodeUk.VALID_POSTCODE_PATTERN, self.post_code)
-        if not regex_postcode:
+        code = self._validate(self.post_code)
+        if not code:
             return False
 
-        self._outward, self._inward = regex_postcode.groups()
+        self._outward, self._inward = code.groups()
         return True
 
     def get_outward(self):
@@ -59,3 +65,23 @@ class PostCodeUk:
     def random_postcode():
         pattern = r"^("+PostCodeUk.OUTWARD_PATTERN+")[ ]("+PostCodeUk.INWARD_PATTERN+"$)"
         return xeger(pattern)
+
+    @staticmethod
+    def find_all_in_text(text, post_codes=[]):
+        if post_codes and not isinstance(post_codes, list):
+            raise TypeError(
+                'postcode should be instance of "list" but received a "{}"'.format(
+                    type(post_codes).__name__
+                )
+            )
+        pattern = PostCodeUk.POSTCODE_PATTERN_IN_TEXT
+
+        if post_codes:
+            if not all(
+                    PostCodeUk._validate(code) if isinstance(code, str) else None
+                    for code in post_codes):
+                return "all postcodes should be valid"
+            pattern = '|'.join(post_codes)
+
+        matches = re.finditer(pattern, text)
+        return [m.group() for m in matches] if matches else None

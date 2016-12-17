@@ -62,3 +62,25 @@ class TestPostCodeUk:
         for i in range(50):
             postcode = PostCodeUk(PostCodeUk.random_postcode())
             assert postcode.is_valid()
+
+    @pytest.mark.parametrize('text, postcodes, expected', [
+        ('Example of text with postcode W1A 0AX and other postcode'
+         'EC1A 1BB', ['EC1A 1BB', 'W1A 0AX'], ['EC1A 1BB', 'W1A 0AX']),
+        ('Other text with on postcode M1 1AE none postcodes informed', [], ['M1 1AE']),
+        ('Other text withiout postcode', ['M1 1AE'], []),
+    ])
+    def test_find_all_in_text_valid(self, text, postcodes, expected):
+        assert sorted(PostCodeUk.find_all_in_text(text, postcodes)) == sorted(expected)
+
+    @pytest.mark.parametrize('text, postcodes, expected', [
+        ('Example of text with postcode W1A 0AX and other postcode'
+         'EC1A 1BB invalid post code informed', 1, TypeError),
+        ('Other text with on postcode M1 1AE invalid postcodes informed', [10],
+         'all postcodes should be valid'),
+    ])
+    def test_find_all_in_text_invalid(self, text, postcodes, expected):
+        if expected == TypeError:
+            with pytest.raises(TypeError):
+                PostCodeUk.find_all_in_text(text, postcodes) == expected
+        else:
+            assert PostCodeUk.find_all_in_text(text, postcodes) == expected
