@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='postcodeuk',
-    version='0.4',
+    version='0.5',
     author="Lucas Santos",
     author_email="lffsantos@gmail.com",
     packages=['postcodeuk'],
