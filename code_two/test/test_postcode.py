@@ -4,6 +4,22 @@ from code_two.postcodeuk import PostCodeUk
 
 
 class TestPostCodeUk:
+
+    valid_postcodes = [
+        {'postcode': PostCodeUk('EC1A 1BB'), 'outward': 'EC1A', 'inward': '1BB'},
+        {'postcode': PostCodeUk('W1A 0AX'), 'outward': 'W1A', 'inward': '0AX'},
+        {'postcode': PostCodeUk('M1 1AE'), 'outward': 'M1', 'inward': '1AE'},
+        {'postcode': PostCodeUk('B33 8TH'), 'outward': 'B33', 'inward': '8TH'},
+        {'postcode': PostCodeUk('CR2 6XH'), 'outward': 'CR2', 'inward': '6XH'},
+        {'postcode': PostCodeUk('DN55 1PT'), 'outward': 'DN55', 'inward': '1PT'},
+    ]
+    invalid_postcodes = [
+        {'postcode': PostCodeUk('')},
+        {'postcode': PostCodeUk('invalid')},
+        {'postcode': PostCodeUk('CR2@ 6XH')},
+        {'postcode': PostCodeUk('DN55-1PT')},
+    ]
+
     @pytest.mark.parametrize('postcode', [
         None, 1, [],
     ])
@@ -11,52 +27,51 @@ class TestPostCodeUk:
         with pytest.raises(TypeError):
             PostCodeUk(postcode)
 
-    @pytest.mark.parametrize('postcode', [
-        (PostCodeUk('EC1A 1BB')), #AANA NAA
-        (PostCodeUk('W1A 0AX')), #ANA NAA
-        (PostCodeUk('M1 1AE')), #AN NAA
-        (PostCodeUk('B33 8TH')), #ANN NAA
-        (PostCodeUk('CR2 6XH')), #AAN NAA
-        (PostCodeUk('DN55 1PT')) #AANN NAA
-    ])
-    def test_valid_postcode(self, postcode):
-        assert postcode.is_valid()
+    @pytest.mark.parametrize('valid_postcodes', valid_postcodes)
+    def test_valid_postcode(self, valid_postcodes):
+        assert valid_postcodes['postcode'].is_valid()
 
-    @pytest.mark.parametrize('postcode', [
-        (PostCodeUk('invalid')),
-        (PostCodeUk('')),
-        (PostCodeUk('B3 8C')),
-        (PostCodeUk('CR2@ 6XH')),
-        (PostCodeUk('DN55-1PT'))
-    ])
-    def test_in_valid_postcode(self, postcode):
-        assert not postcode.is_valid()
+    @pytest.mark.parametrize('invalid_postcodes', invalid_postcodes)
+    def test_in_valid_postcode(self, invalid_postcodes):
+        assert not invalid_postcodes['postcode'].is_valid()
 
-    @pytest.mark.parametrize('postcode, expected', [
-        (PostCodeUk('EC1A 1BB'), 'EC1A'),
-        (PostCodeUk('W1A 0AX'), 'W1A'),
-        (PostCodeUk('M1 1AE'), 'M1'),
-        (PostCodeUk('B33 8TH'), 'B33'),
-        (PostCodeUk('CR2 6XH'), 'CR2'),
-        (PostCodeUk('DN55 1PT'), 'DN55'),
-        (PostCodeUk(''), None),
-        (PostCodeUk('invalid'), None)
-    ])
-    def test_get_outward(self, postcode, expected):
-        assert postcode.get_outward() == expected
+    @pytest.mark.parametrize('valid_postcodes', valid_postcodes)
+    def test__valid_true(self, valid_postcodes):
+        assert valid_postcodes['postcode']._valid()
+        assert valid_postcodes['postcode'].get_outward() == valid_postcodes['outward']
+        assert valid_postcodes['postcode'].get_inward() == valid_postcodes['inward']
 
-    @pytest.mark.parametrize('postcode, expected', [
-        (PostCodeUk('EC1A 1BB'), '1BB'),
-        (PostCodeUk('W1A 0AX'), '0AX'),
-        (PostCodeUk('M1 1AE'), '1AE'),
-        (PostCodeUk('B33 8TH'), '8TH'),
-        (PostCodeUk('CR2 6XH'), '6XH'),
-        (PostCodeUk('DN55 1PT'), '1PT'),
-        (PostCodeUk(''), None),
-        (PostCodeUk('invalid'), None)
+    @pytest.mark.parametrize('invalid_postcodes', invalid_postcodes)
+    def test__valid_false(self, invalid_postcodes):
+        assert not invalid_postcodes['postcode']._valid()
+        assert not invalid_postcodes['postcode'].get_outward()
+        assert not invalid_postcodes['postcode'].get_inward()
+
+    @pytest.mark.parametrize('postcode, expected_object', [
+        ('EC1A 1BB', True), ('W1A 0AX', True), ('M1 1AE', True),
+        ('', False), ('invalid', False)
     ])
-    def test_get_inward(self, postcode, expected):
-        assert postcode.get_inward() == expected
+    def test_validate(self, postcode, expected_object):
+        if expected_object:
+            assert PostCodeUk._validate(postcode)
+        else:
+            assert not PostCodeUk._validate(postcode)
+
+    @pytest.mark.parametrize('valid_postcodes', valid_postcodes)
+    def test_get_outward_valid(self, valid_postcodes):
+        assert valid_postcodes['postcode'].get_outward() == valid_postcodes['outward']
+
+    @pytest.mark.parametrize('invalid_postcodes', invalid_postcodes)
+    def test_get_outward_valid(self, invalid_postcodes):
+        assert not invalid_postcodes['postcode'].get_outward()
+
+    @pytest.mark.parametrize('valid_postcodes', valid_postcodes)
+    def test_get_inward_valid(self, valid_postcodes):
+        assert valid_postcodes['postcode'].get_inward() == valid_postcodes['inward']
+
+    @pytest.mark.parametrize('invalid_postcodes', invalid_postcodes)
+    def test_get_inward_valid(self, invalid_postcodes):
+        assert not invalid_postcodes['postcode'].get_inward()
 
     def test_random_postcode(self):
         for i in range(50):
