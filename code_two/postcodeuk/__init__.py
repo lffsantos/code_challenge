@@ -36,14 +36,14 @@ class PostCodeUk:
                 )
             )
         self.post_code = post_code
-        self._is_valid = self._is_valid()
+        self._is_valid = self._valid()
 
-    @staticmethod
-    def _validate(post_code):
-        regex_postcode = re.match(PostCodeUk.VALID_POSTCODE_PATTERN, post_code)
+    @classmethod
+    def _validate(cls, post_code):
+        regex_postcode = re.match(cls.VALID_POSTCODE_PATTERN, post_code)
         return regex_postcode if regex_postcode else None
 
-    def _is_valid(self):
+    def _valid(self):
         if not self.post_code:
             return False
 
